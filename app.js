@@ -17,52 +17,42 @@
   const MIN_ORDER = 100;
 
   // ==================
-  // PRODUCTS
+  // PRODUCTS & SIZES
   // ==================
   const PRODUCTS = [
     {
       id: 1,
-      name: 'Mix Clásico',
-      desc: 'La receta original con tomate, limón y especias perfectas. 500ml.',
-      price: 75,
+      name: 'Mix Cl\u00E1sico',
+      desc: 'La receta original con tomate, lim\u00F3n y especias perfectas.',
       gradient: 'linear-gradient(135deg, #E84B8A 0%, #F06292 100%)',
     },
     {
       id: 2,
       name: 'Mix Mango-Habanero',
-      desc: 'Tropical y picante, una explosión de sabor irresistible. 500ml.',
-      price: 85,
+      desc: 'Tropical y picante, una explosi\u00F3n de sabor irresistible.',
       gradient: 'linear-gradient(135deg, #F57C00 0%, #FFB74D 100%)',
     },
     {
       id: 3,
       name: 'Mix Tamarindo',
-      desc: 'Dulce, ácida y adictivamente refrescante. 500ml.',
-      price: 85,
+      desc: 'Dulce, \u00E1cida y adictivamente refrescante.',
       gradient: 'linear-gradient(135deg, #8D6E63 0%, #D7CCC8 100%)',
     },
     {
       id: 4,
       name: 'Mix Chamoy',
-      desc: 'Con chamoy artesanal, la favorita de todos. 500ml.',
-      price: 85,
+      desc: 'Con chamoy artesanal, la favorita de todos.',
       gradient: 'linear-gradient(135deg, #AD1457 0%, #E91E63 100%)',
     },
-    {
-      id: 5,
-      name: 'Kit Completo',
-      desc: 'Mix Clásico + vasos escarchados + salsas + limones. Todo listo.',
-      price: 150,
-      gradient: 'linear-gradient(135deg, #D4A017 0%, #F5D060 100%)',
-    },
-    {
-      id: 6,
-      name: 'Pack Familiar',
-      desc: '3 envases de mix (elige tus favoritos). Ideal para fiestas.',
-      price: 199,
-      gradient: 'linear-gradient(135deg, #7B1FA2 0%, #CE93D8 100%)',
-    },
   ];
+
+  var SIZES = [
+    { label: '500ml', price: 35 },
+    { label: '1 Litro', price: 65 },
+  ];
+
+  var DELIVERY_MIN = 25;
+  var DELIVERY_MAX = 30;
 
   // ==================
   // SVG ICONS
@@ -95,32 +85,36 @@
   // ==================
   var cart = [];
 
-  function addToCart(id) {
-    var product = PRODUCTS.find(function (p) { return p.id === id; });
-    var existing = cart.find(function (i) { return i.id === id; });
+  function addToCart(productId, sizeIdx) {
+    var product = PRODUCTS.find(function (p) { return p.id === productId; });
+    var size = SIZES[sizeIdx];
+    var cartKey = productId + '-' + sizeIdx;
+    var existing = cart.find(function (i) { return i.id === cartKey; });
     if (existing) {
       existing.qty++;
     } else {
-      cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
+      cart.push({ id: cartKey, name: product.name + ' (' + size.label + ')', price: size.price, qty: 1 });
     }
     updateCartUI();
     // Button feedback
-    var btn = document.querySelector('[data-add="' + id + '"]');
+    var btn = document.querySelector('[data-add="' + productId + '"][data-size="' + sizeIdx + '"]');
     if (btn) {
+      var origText = btn.innerHTML;
       btn.classList.add('added');
-      btn.innerHTML = icon('check', 16) + ' Agregado';
+      btn.innerHTML = icon('check', 14) + ' Listo';
       setTimeout(function () {
         btn.classList.remove('added');
-        btn.innerHTML = icon('plus', 16) + ' Agregar';
+        btn.innerHTML = origText;
       }, 1200);
     }
   }
 
   function updateQty(id, delta) {
-    var item = cart.find(function (i) { return i.id === id; });
+    var idStr = String(id);
+    var item = cart.find(function (i) { return String(i.id) === idStr; });
     if (!item) return;
     item.qty = Math.max(0, item.qty + delta);
-    if (item.qty === 0) cart = cart.filter(function (i) { return i.id !== id; });
+    if (item.qty === 0) cart = cart.filter(function (i) { return String(i.id) !== idStr; });
     updateCartUI();
   }
 
@@ -147,7 +141,7 @@
   // ==================
 
   function buildPromoBanner() {
-    var text = '\u2605 Q' + PROMO_DISCOUNT + ' DE DESCUENTO en pedidos en l\u00EDnea \u2022 ENV\u00CDO GRATIS en pedidos mayores a Q' + MIN_ORDER + ' \u2605';
+    var text = '\u2605 Q' + PROMO_DISCOUNT + ' DE DESCUENTO + ENV\u00CDO GRATIS en pedidos mayores a Q' + MIN_ORDER + ' \u2022 Entrega el mismo d\u00EDa \u2022 Ped\u00ED antes de las 7:40 AM \u2605';
     var banner = document.createElement('div');
     banner.className = 'promo-banner';
     // Duplicate text for seamless marquee
@@ -177,7 +171,7 @@
         '<li><a href="#pedido">Ordenar</a></li>' +
       '</ul>' +
       '<div style="display:flex;align-items:center;gap:8px">' +
-        '<button class="nav-cart" onclick="document.getElementById(\'pedido\').scrollIntoView({behavior:\'smooth\'})" aria-label="Ver carrito">' +
+        '<button class="nav-cart" id="nav-cart-btn" aria-label="Ver carrito">' +
           icon('cart', 22) +
           '<span class="cart-badge" id="cart-badge">0</span>' +
         '</button>' +
@@ -286,9 +280,13 @@
           '<div class="product-body">' +
             '<h3>' + p.name + '</h3>' +
             '<p class="product-desc">' + p.desc + '</p>' +
-            '<div class="product-footer">' +
-              '<span class="product-price">Q' + p.price + '</span>' +
-              '<button class="btn-add" data-add="' + p.id + '">' + icon('plus', 16) + ' Agregar</button>' +
+            '<div class="product-sizes">' +
+              '<button class="btn-add btn-size" data-add="' + p.id + '" data-size="0">' +
+                '<span class="size-label">500ml</span><span class="size-price">Q35</span>' +
+              '</button>' +
+              '<button class="btn-add btn-size" data-add="' + p.id + '" data-size="1">' +
+                '<span class="size-label">1 Litro</span><span class="size-price">Q65</span>' +
+              '</button>' +
             '</div>' +
           '</div>' +
         '</div>'
@@ -309,7 +307,7 @@
     setTimeout(function () {
       document.querySelectorAll('[data-add]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          addToCart(parseInt(this.getAttribute('data-add')));
+          addToCart(parseInt(this.getAttribute('data-add')), parseInt(this.getAttribute('data-size')));
         });
       });
     }, 0);
@@ -333,7 +331,7 @@
             '<p>En GUO Monchis creemos que una buena michelada tiene el poder de unir a las personas. Nuestros mixes artesanales est\u00E1n hechos con ingredientes frescos y recetas perfeccionadas con amor.</p>' +
             '<p>Cada envase est\u00E1 listo para que prepares la michelada perfecta en la comodidad de tu hogar, en tus reuniones o donde quieras disfrutar.</p>' +
             '<div class="about-stats">' +
-              '<div class="stat"><div class="stat-number" data-count="6">0</div><div class="stat-label">Sabores</div></div>' +
+              '<div class="stat"><div class="stat-number" data-count="4">0</div><div class="stat-label">Sabores</div></div>' +
               '<div class="stat"><div class="stat-number" data-count="500">0</div><div class="stat-label">Clientes Felices</div></div>' +
               '<div class="stat"><div class="stat-number" data-count="3">0</div><div class="stat-label">A\u00F1os</div></div>' +
             '</div>' +
@@ -371,7 +369,7 @@
             '<div class="step-number">3</div>' +
             '<div class="step-icon">' + ICONS.truck + '</div>' +
             '<h3>Recib\u00ED en Casa</h3>' +
-            '<p>Te lo llevamos a tu puerta. Env\u00EDo gratis en pedidos mayores a Q' + MIN_ORDER + '.</p>' +
+            '<p>Entrega el mismo d\u00EDa si ped\u00EDs antes de las 7:40 AM. Env\u00EDo Q' + DELIVERY_MIN + '\u2013Q' + DELIVERY_MAX + ' seg\u00FAn zona. GRATIS en pedidos mayores a Q' + MIN_ORDER + '.</p>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -420,6 +418,10 @@
               '<button type="button" class="btn-whatsapp" id="btn-wa-order">' + icon('whatsapp', 22) + ' Pedir por WhatsApp</button>' +
               '<button type="button" class="btn-email" id="btn-email-order">' + icon('mail', 20) + ' Por Correo</button>' +
             '</div>' +
+            '<div class="coming-soon-box" style="margin-top:20px">' +
+              '<span class="coming-soon-badge">PR\u00D3XIMAMENTE</span>' +
+              '<span class="coming-soon-text">Pagos con tarjeta de cr\u00E9dito/d\u00E9bito y Apple Pay</span>' +
+            '</div>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -463,12 +465,13 @@
         (hasDiscount
           ? '<div class="summary-row discount"><span>Descuento promo</span><span>-Q' + discount + '</span></div>' +
             '<div class="summary-row"><span>Env\u00EDo</span><span style="color:var(--green-wa);font-weight:600">GRATIS</span></div>'
-          : '<div class="summary-row"><span>Env\u00EDo</span><span>Por confirmar</span></div>') +
-        '<div class="summary-row total"><span>Total</span><span>Q' + total + '</span></div>' +
+          : '<div class="summary-row"><span>Env\u00EDo</span><span>Q' + DELIVERY_MIN + ' \u2013 Q' + DELIVERY_MAX + ' (seg\u00FAn zona)</span></div>') +
+        '<div class="summary-row total"><span>Total</span><span>Q' + total + (hasDiscount ? '' : ' + env\u00EDo') + '</span></div>' +
       '</div>' +
       (!hasDiscount
         ? '<div class="summary-promo">' + icon('star', 14) + ' Agreg\u00E1 Q' + (MIN_ORDER - subtotal) + ' m\u00E1s para env\u00EDo gratis y Q' + PROMO_DISCOUNT + ' de descuento</div>'
-        : '');
+        : '') +
+      '<div class="summary-promo" style="margin-top:8px;background:var(--pink-soft);color:var(--brown-mid)">Entrega el mismo d\u00EDa si ped\u00EDs antes de las 7:40 AM</div>';
 
     // Attach qty handlers
     container.querySelectorAll('[data-qty-minus]').forEach(function (btn) {
@@ -500,7 +503,7 @@
 
     var subtotal = getTotal();
     var discount = subtotal >= MIN_ORDER ? PROMO_DISCOUNT : 0;
-    var delivery = subtotal >= MIN_ORDER ? 'GRATIS' : 'Por confirmar';
+    var delivery = subtotal >= MIN_ORDER ? 'GRATIS' : 'Q' + DELIVERY_MIN + '-Q' + DELIVERY_MAX + ' (seg\u00FAn zona)';
     var total = subtotal - discount;
 
     var msg = '*Nuevo Pedido \u2014 GUO Monchis*\n\n';
@@ -512,9 +515,9 @@
       msg += '\u2022 ' + item.name + ' x' + item.qty + ' \u2014 Q' + (item.price * item.qty) + '\n';
     });
     msg += '\n*Subtotal:* Q' + subtotal;
-    if (discount > 0) msg += '\n*Descuento:* -Q' + discount;
+    if (discount > 0) msg += '\n*Descuento promo:* -Q' + discount;
     msg += '\n*Env\u00EDo:* ' + delivery;
-    msg += '\n*Total:* Q' + total;
+    msg += '\n*Total estimado:* Q' + total + (subtotal < MIN_ORDER ? ' + env\u00EDo' : '');
     if (notes) msg += '\n\n*Notas:* ' + notes;
 
     return msg;
@@ -532,6 +535,120 @@
     var subject = encodeURIComponent('Nuevo Pedido \u2014 GUO Monchis');
     var body = encodeURIComponent(msg.replace(/\*/g, ''));
     window.location.href = 'mailto:' + EMAIL + '?subject=' + subject + '&body=' + body;
+  }
+
+  // ==================
+  // CART SIDEBAR
+  // ==================
+  function buildCartSidebar() {
+    var overlay = document.createElement('div');
+    overlay.className = 'cart-sidebar';
+    overlay.id = 'cart-sidebar';
+    overlay.innerHTML =
+      '<div class="cart-sidebar-panel">' +
+        '<div class="cart-sidebar-header">' +
+          '<h3>' + icon('cart', 22) + ' Tu Carrito</h3>' +
+          '<button class="cart-sidebar-close" id="cart-sidebar-close" aria-label="Cerrar carrito">' + icon('close', 22) + '</button>' +
+        '</div>' +
+        '<div class="cart-sidebar-body" id="cart-sidebar-body">' +
+          '<div class="summary-empty">Tu carrito est\u00E1 vac\u00EDo.<br>Agreg\u00E1 productos para comenzar.</div>' +
+        '</div>' +
+        '<div class="cart-sidebar-footer" id="cart-sidebar-footer" style="display:none">' +
+          '<div id="cart-sidebar-totals"></div>' +
+          '<button class="btn-primary cart-continue" id="cart-continue-btn" style="width:100%;justify-content:center;margin-top:16px">' + icon('arrow', 18) + ' Continuar con el Pedido</button>' +
+          '<div class="coming-soon-box">' +
+            '<span class="coming-soon-badge">PR\u00D3XIMAMENTE</span>' +
+            '<span class="coming-soon-text">Pagos con tarjeta y Apple Pay</span>' +
+            '<div class="coming-soon-icons">' +
+              '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--brown-light)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>' +
+              '<svg viewBox="0 0 24 24" width="28" height="28" fill="var(--brown-light)"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.52-3.23 0-1.44.62-2.2.44-3.06-.4C3.29 15.78 3.93 9.04 8.63 8.77c1.28.06 2.15.72 2.9.75.92-.18 1.8-.88 3.15-.77 1.26.1 2.4.6 3.18 1.6-3.48 2.1-2.84 6.3.3 7.77-.67 1.75-1.54 3.48-3.11 3.96zM12.03 8.7c-.15-2.38 1.72-4.38 3.97-4.57.28 2.52-2.26 4.73-3.97 4.57z"/></svg>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeCartSidebar();
+    });
+
+    return overlay;
+  }
+
+  function openCartSidebar() {
+    var s = document.getElementById('cart-sidebar');
+    s.style.display = 'block';
+    requestAnimationFrame(function () { s.classList.add('open'); });
+    document.body.style.overflow = 'hidden';
+    renderCartSidebar();
+  }
+
+  function closeCartSidebar() {
+    var s = document.getElementById('cart-sidebar');
+    s.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function () { s.style.display = ''; }, 350);
+  }
+
+  function renderCartSidebar() {
+    var body = document.getElementById('cart-sidebar-body');
+    var footer = document.getElementById('cart-sidebar-footer');
+    var totals = document.getElementById('cart-sidebar-totals');
+    if (!body) return;
+
+    if (cart.length === 0) {
+      body.innerHTML = '<div class="summary-empty">Tu carrito est\u00E1 vac\u00EDo.<br>Agreg\u00E1 productos para comenzar.</div>';
+      if (footer) footer.style.display = 'none';
+      return;
+    }
+
+    var items = cart.map(function (item) {
+      return (
+        '<div class="sidebar-item">' +
+          '<div class="sidebar-item-info">' +
+            '<div class="summary-item-name">' + item.name + '</div>' +
+            '<div class="summary-item-price">Q' + item.price + ' c/u</div>' +
+          '</div>' +
+          '<div class="summary-item-qty">' +
+            '<button class="qty-btn" data-sq-minus="' + item.id + '">' + icon('minus', 14) + '</button>' +
+            '<span class="qty-value">' + item.qty + '</span>' +
+            '<button class="qty-btn" data-sq-plus="' + item.id + '">' + icon('plus', 14) + '</button>' +
+          '</div>' +
+          '<div class="sidebar-item-total">Q' + (item.price * item.qty) + '</div>' +
+        '</div>'
+      );
+    }).join('');
+
+    body.innerHTML = items;
+    if (footer) footer.style.display = 'block';
+
+    var subtotal = getTotal();
+    var hasDiscount = subtotal >= MIN_ORDER;
+    var discount = hasDiscount ? PROMO_DISCOUNT : 0;
+    var total = subtotal - discount;
+
+    if (totals) {
+      totals.innerHTML =
+        '<div class="summary-row"><span>Subtotal</span><span>Q' + subtotal + '</span></div>' +
+        (hasDiscount
+          ? '<div class="summary-row discount"><span>Descuento</span><span>-Q' + discount + '</span></div>' +
+            '<div class="summary-row"><span>Env\u00EDo</span><span style="color:var(--green-wa);font-weight:600">GRATIS</span></div>'
+          : '<div class="summary-row"><span>Env\u00EDo</span><span>Q' + DELIVERY_MIN + '\u2013Q' + DELIVERY_MAX + '</span></div>') +
+        '<div class="summary-row total"><span>Total</span><span>Q' + total + (hasDiscount ? '' : ' + env\u00EDo') + '</span></div>';
+    }
+
+    // Attach sidebar qty handlers
+    body.querySelectorAll('[data-sq-minus]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        updateQty(this.getAttribute('data-sq-minus'), -1);
+        renderCartSidebar();
+      });
+    });
+    body.querySelectorAll('[data-sq-plus]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        updateQty(this.getAttribute('data-sq-plus'), 1);
+        renderCartSidebar();
+      });
+    });
   }
 
   function buildFooter() {
@@ -765,12 +882,19 @@
     app.appendChild(buildOrderSection());
     app.appendChild(buildFooter());
     app.appendChild(buildWhatsAppFloat());
+    app.appendChild(buildCartSidebar());
 
     // Event listeners
     document.getElementById('hamburger').addEventListener('click', openMobile);
     document.getElementById('mobile-close').addEventListener('click', closeMobile);
     document.getElementById('btn-wa-order').addEventListener('click', sendWhatsApp);
     document.getElementById('btn-email-order').addEventListener('click', sendEmail);
+    document.getElementById('nav-cart-btn').addEventListener('click', openCartSidebar);
+    document.getElementById('cart-sidebar-close').addEventListener('click', closeCartSidebar);
+    document.getElementById('cart-continue-btn').addEventListener('click', function () {
+      closeCartSidebar();
+      document.getElementById('pedido').scrollIntoView({ behavior: 'smooth' });
+    });
 
     // Init animations after DOM is ready
     requestAnimationFrame(function () {
