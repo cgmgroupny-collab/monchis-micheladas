@@ -25,24 +25,32 @@
       name: 'Mix Cl\u00E1sico',
       desc: 'La receta original con tomate, lim\u00F3n y especias perfectas.',
       gradient: 'linear-gradient(135deg, #E84B8A 0%, #F06292 100%)',
+      badge: 'Original',
+      badgeColor: '#E84B8A',
     },
     {
       id: 2,
       name: 'Mix Mango-Habanero',
       desc: 'Tropical y picante, una explosi\u00F3n de sabor irresistible.',
       gradient: 'linear-gradient(135deg, #F57C00 0%, #FFB74D 100%)',
+      badge: 'Popular',
+      badgeColor: '#F57C00',
     },
     {
       id: 3,
       name: 'Mix Tamarindo',
       desc: 'Dulce, \u00E1cida y adictivamente refrescante.',
       gradient: 'linear-gradient(135deg, #8D6E63 0%, #D7CCC8 100%)',
+      badge: 'Nuevo',
+      badgeColor: '#8D6E63',
     },
     {
       id: 4,
       name: 'Mix Chamoy',
       desc: 'Con chamoy artesanal, la favorita de todos.',
       gradient: 'linear-gradient(135deg, #AD1457 0%, #E91E63 100%)',
+      badge: 'Favorito',
+      badgeColor: '#AD1457',
     },
   ];
 
@@ -73,6 +81,8 @@
     drink: '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 16h32l-4 40H20L16 16z"/><path d="M12 16h40"/><path d="M28 8l-2 8M36 8l2 8M32 6v10" stroke-width="2" opacity="0.5"/></svg>',
     truck: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
     bag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    heartFilled: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
   };
 
   function icon(name, size) {
@@ -134,6 +144,40 @@
       badge.style.display = count > 0 ? 'flex' : 'none';
     }
     renderOrderSummary();
+  }
+
+  // ==================
+  // FAVORITES (localStorage)
+  // ==================
+  function getFavorites() {
+    try { return JSON.parse(localStorage.getItem('gudmonchis_favs') || '[]'); }
+    catch (e) { return []; }
+  }
+
+  function isFavorite(productId) {
+    return getFavorites().indexOf(productId) !== -1;
+  }
+
+  function toggleFavorite(productId) {
+    var favs = getFavorites();
+    var idx = favs.indexOf(productId);
+    if (idx > -1) {
+      favs.splice(idx, 1);
+    } else {
+      favs.push(productId);
+    }
+    localStorage.setItem('gudmonchis_favs', JSON.stringify(favs));
+    // Update heart UI
+    var btn = document.querySelector('[data-fav="' + productId + '"]');
+    if (btn) {
+      var liked = isFavorite(productId);
+      btn.innerHTML = icon(liked ? 'heartFilled' : 'heart', 22);
+      btn.classList.toggle('is-liked', liked);
+      if (liked) {
+        btn.classList.add('heart-pop');
+        setTimeout(function () { btn.classList.remove('heart-pop'); }, 400);
+      }
+    }
   }
 
   // ==================
@@ -267,9 +311,14 @@
     section.id = 'productos';
 
     var cards = PRODUCTS.map(function (p) {
+      var liked = isFavorite(p.id);
       return (
         '<div class="product-card" data-tilt>' +
           '<div class="product-img" style="background:' + p.gradient + '">' +
+            '<button class="product-heart' + (liked ? ' is-liked' : '') + '" data-fav="' + p.id + '" aria-label="Agregar a favoritos">' +
+              icon(liked ? 'heartFilled' : 'heart', 22) +
+            '</button>' +
+            '<span class="product-badge" style="background:' + p.badgeColor + '">' + p.badge + '</span>' +
             '<span class="placeholder-icon">' + ICONS.drink + '</span>' +
             '<span class="placeholder-label">Foto pronto</span>' +
           '</div>' +
@@ -304,6 +353,12 @@
       document.querySelectorAll('[data-add]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           addToCart(parseInt(this.getAttribute('data-add')), parseInt(this.getAttribute('data-size')));
+        });
+      });
+      document.querySelectorAll('[data-fav]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggleFavorite(parseInt(this.getAttribute('data-fav')));
         });
       });
     }, 0);
