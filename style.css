@@ -51,6 +51,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-top: var(--promo-h);
 }
 
 img { max-width: 100%; height: auto; display: block; }
@@ -85,17 +86,24 @@ h1, h2, h3, h4 {
   color: var(--brown);
   height: var(--promo-h);
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
+  cursor: pointer;
 }
 
 .promo-track {
   display: flex;
   align-items: center;
-  justify-content: center;
   height: 100%;
+  animation: marquee 20s linear infinite;
   white-space: nowrap;
+  will-change: transform;
 }
+
+.promo-track:hover { animation-play-state: paused; }
 
 .promo-track span {
   font-family: var(--font-display);
@@ -119,7 +127,7 @@ h1, h2, h3, h4 {
 /* ========== NAVIGATION ========== */
 .nav {
   position: sticky;
-  top: 0;
+  top: var(--promo-h);
   z-index: 90;
   height: var(--nav-h);
   display: flex;
@@ -755,7 +763,7 @@ h1, h2, h3, h4 {
   padding: 32px;
   box-shadow: var(--shadow-sm);
   position: sticky;
-  top: calc(var(--nav-h) + var(--promo-h) + 24px);
+  top: calc(var(--nav-h) + var(--promo-h) + 32px);
 }
 
 .order-summary h3 {

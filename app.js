@@ -191,7 +191,13 @@
     banner.innerHTML =
       '<div class="promo-track">' +
       '<span>' + text + '</span>' +
+      '<span>' + text + '</span>' +
+      '<span>' + text + '</span>' +
+      '<span>' + text + '</span>' +
       '</div>';
+    banner.addEventListener('click', function () {
+      document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
+    });
     return banner;
   }
 
