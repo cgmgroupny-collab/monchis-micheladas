@@ -144,12 +144,8 @@
     var text = '\u2605 Q' + PROMO_DISCOUNT + ' DE DESCUENTO + ENV\u00CDO GRATIS en pedidos mayores a Q' + MIN_ORDER + ' \u2022 Entrega el mismo d\u00EDa \u2022 Ped\u00ED antes de las 7:40 AM \u2605';
     var banner = document.createElement('div');
     banner.className = 'promo-banner';
-    // Duplicate text for seamless marquee
     banner.innerHTML =
       '<div class="promo-track">' +
-      '<span>' + text + '</span>' +
-      '<span>' + text + '</span>' +
-      '<span>' + text + '</span>' +
       '<span>' + text + '</span>' +
       '</div>';
     return banner;
