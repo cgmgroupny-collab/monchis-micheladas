@@ -1,5 +1,5 @@
 /* ============================================
-   GUO Monchis — Micheladas Artesanales
+   GUD Monchis — Micheladas Artesanales
    JS-driven page with GSAP animations
    ============================================ */
 (function () {
@@ -161,8 +161,8 @@
     nav.id = 'main-nav';
     nav.innerHTML =
       '<a href="#" class="nav-logo">' +
-        '<img src="logo-1.png" alt="GUO Monchis logo" width="48" height="48">' +
-        '<span class="nav-logo-text">GUO Monchis</span>' +
+        '<img src="logo-1.png" alt="GUD Monchis logo" width="48" height="48">' +
+        '<span class="nav-logo-text">GUD Monchis</span>' +
       '</a>' +
       '<ul class="nav-links">' +
         '<li><a href="#productos">Productos</a></li>' +
@@ -253,7 +253,7 @@
       '<div class="deco-circle" style="width:100px;height:100px;background:var(--gold-light);opacity:0.15;top:30%;left:10%;animation:float-slow 12s ease-in-out infinite 2s"></div>' +
       '<div class="hero-content">' +
         '<div class="hero-logo">' +
-          '<img src="logo-2.png" alt="GUO Monchis — Micheladas Artesanales" width="180" height="180">' +
+          '<img src="logo-2.png" alt="GUD Monchis — Micheladas Artesanales" width="180" height="180">' +
         '</div>' +
         '<h1>Micheladas Artesanales</h1>' +
         '<p class="hero-sub">Mix de michelada para preparar en casa. Hecho con amor en Ciudad de Guatemala.</p>' +
@@ -328,7 +328,7 @@
           '<div class="about-text">' +
             '<span class="section-tag">Nuestra Historia</span>' +
             '<h2>Hechas con Pasi\u00F3n en Guatemala</h2>' +
-            '<p>En GUO Monchis creemos que una buena michelada tiene el poder de unir a las personas. Nuestros mixes artesanales est\u00E1n hechos con ingredientes frescos y recetas perfeccionadas con amor.</p>' +
+            '<p>En GUD Monchis creemos que una buena michelada tiene el poder de unir a las personas. Nuestros mixes artesanales est\u00E1n hechos con ingredientes frescos y recetas perfeccionadas con amor.</p>' +
             '<p>Cada envase est\u00E1 listo para que prepares la michelada perfecta en la comodidad de tu hogar, en tus reuniones o donde quieras disfrutar.</p>' +
             '<div class="about-stats">' +
               '<div class="stat"><div class="stat-number" data-count="4">0</div><div class="stat-label">Sabores</div></div>' +
@@ -506,7 +506,7 @@
     var delivery = subtotal >= MIN_ORDER ? 'GRATIS' : 'Q' + DELIVERY_MIN + '-Q' + DELIVERY_MAX + ' (seg\u00FAn zona)';
     var total = subtotal - discount;
 
-    var msg = '*Nuevo Pedido \u2014 GUO Monchis*\n\n';
+    var msg = '*Nuevo Pedido \u2014 GUD Monchis*\n\n';
     msg += '*Nombre:* ' + name + '\n';
     msg += '*Tel\u00E9fono:* ' + phone + '\n';
     msg += '*Direcci\u00F3n:* ' + address + '\n\n';
@@ -532,7 +532,7 @@
   function sendEmail() {
     var msg = buildOrderMessage();
     if (!msg) return;
-    var subject = encodeURIComponent('Nuevo Pedido \u2014 GUO Monchis');
+    var subject = encodeURIComponent('Nuevo Pedido \u2014 GUD Monchis');
     var body = encodeURIComponent(msg.replace(/\*/g, ''));
     window.location.href = 'mailto:' + EMAIL + '?subject=' + subject + '&body=' + body;
   }
@@ -658,8 +658,8 @@
       '<div class="footer-grid">' +
         '<div class="footer-brand">' +
           '<div class="footer-logo">' +
-            '<img src="logo-1.png" alt="GUO Monchis" width="56" height="56">' +
-            '<span>GUO Monchis</span>' +
+            '<img src="logo-1.png" alt="GUD Monchis" width="56" height="56">' +
+            '<span>GUD Monchis</span>' +
           '</div>' +
           '<p>Micheladas artesanales para llevar. Hechas con ingredientes frescos y mucho cari\u00F1o en Ciudad de Guatemala.</p>' +
         '</div>' +
@@ -683,7 +683,7 @@
         '</div>' +
       '</div>' +
       '<div class="footer-bottom">' +
-        '\u00A9 ' + new Date().getFullYear() + ' GUO Monchis. Todos los derechos reservados.' +
+        '\u00A9 ' + new Date().getFullYear() + ' GUD Monchis. Todos los derechos reservados.' +
       '</div>';
     return footer;
   }
