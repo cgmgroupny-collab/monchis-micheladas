@@ -1272,12 +1272,407 @@ h1, h2, h3, h4 {
   66% { transform: translate(15px, -30px) scale(0.95); }
 }
 
+/* ========== SUBSECTION HEADERS ========== */
+.subsection-header {
+  margin-top: 64px;
+}
+
+/* ========== EXTRAS ========== */
+.extras-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.extra-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.extra-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
+
+.extra-header {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.extra-body {
+  padding: 20px;
+}
+
+.extra-body h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.extra-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--cream);
+  color: var(--brown);
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A5C50' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.extra-select:focus {
+  border-color: var(--pink);
+}
+
+.btn-extra {
+  width: 100%;
+  justify-content: space-between;
+  padding: 12px 18px;
+}
+
+/* ========== COMBOS ========== */
+.combos-section {
+  background: var(--cream);
+}
+
+.combos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.combo-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.3s, transform 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.combo-card:hover {
+  box-shadow: 0 12px 40px rgba(232,75,138,0.15);
+  transform: translateY(-6px);
+}
+
+.combo-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--pink), var(--gold));
+}
+
+.combo-badge {
+  display: inline-block;
+  background: var(--gold-bg);
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 16px;
+}
+
+.combo-card h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: var(--pink);
+}
+
+.combo-card p {
+  color: var(--brown-mid);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.combo-price {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 36px;
+  color: var(--brown);
+  margin-bottom: 20px;
+}
+
+.btn-combo {
+  width: 100%;
+  justify-content: center;
+  padding: 14px 20px;
+  font-size: 14px;
+}
+
+/* ========== BEBIDAS A DOMICILIO ========== */
+.bebidas-section {
+  background: var(--white);
+}
+
+.bebidas-drinks-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.drink-tag {
+  display: inline-block;
+  background: var(--pink-soft);
+  color: var(--pink);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+}
+
+.bebidas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.bebida-card {
+  background: var(--cream);
+  border-radius: var(--radius-md);
+  padding: 32px 24px;
+  text-align: center;
+  border: 2px solid var(--cream-dark);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.bebida-card:hover {
+  border-color: var(--pink-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.bebida-icon {
+  width: 56px;
+  height: 56px;
+  color: var(--pink);
+  margin: 0 auto 16px;
+}
+
+.bebida-card h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.bebida-card > p {
+  color: var(--brown-mid);
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.bebida-price-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+
+.bebida-price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bebida-amount {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--pink);
+  line-height: 1;
+}
+
+.bebida-detail {
+  font-size: 13px;
+  color: var(--brown-mid);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.bebida-breakdown {
+  font-size: 12px;
+  color: var(--brown-light);
+  font-style: italic;
+}
+
+.bebidas-cta {
+  text-align: center;
+}
+
+.bebidas-cta p {
+  color: var(--brown-mid);
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.bebidas-cta .btn-whatsapp {
+  display: inline-flex;
+}
+
+/* ========== EVENTOS PRIVADOS ========== */
+.eventos-section {
+  background: var(--cream);
+}
+
+.evento-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.evento-features {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.evento-feature {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.evento-feature-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--pink);
+  margin-bottom: 12px;
+}
+
+.evento-feature h4 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.evento-feature p {
+  color: var(--brown-mid);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.evento-form {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.evento-form h3 {
+  font-size: 22px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.evento-drink-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.evento-drink-selects .form-group {
+  margin-bottom: 0;
+}
+
+.evento-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--cream-dark);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--cream);
+  color: var(--brown);
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A5C50' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.evento-select:focus {
+  border-color: var(--pink);
+}
+
+.evento-sizes {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 10px 20px;
+  background: var(--cream);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--cream-dark);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.radio-label:has(input:checked) {
+  border-color: var(--pink);
+  background: var(--pink-soft);
+  color: var(--pink);
+}
+
+.radio-label input[type="radio"] {
+  accent-color: var(--pink);
+  width: 18px;
+  height: 18px;
+}
+
+/* 2-col product grid for fewer items */
+.products-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1024px) {
   .about-grid { grid-template-columns: 1fr; gap: 32px; }
   .order-wrapper { grid-template-columns: 1fr; }
   .order-summary { position: static; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
+  .evento-wrapper { grid-template-columns: 1fr; }
+  .combos-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -1295,7 +1690,18 @@ h1, h2, h3, h4 {
   .hero-actions .btn-secondary { width: 100%; justify-content: center; }
 
   .products-grid { grid-template-columns: 1fr; }
+  .products-grid-2 { grid-template-columns: 1fr; max-width: 100%; }
   .product-img { height: 200px; }
+
+  .extras-grid { grid-template-columns: 1fr; }
+
+  .combos-grid { grid-template-columns: 1fr; }
+  .combo-price { font-size: 28px; }
+
+  .bebidas-grid { grid-template-columns: 1fr; }
+
+  .form-row { grid-template-columns: 1fr; }
+  .evento-sizes { flex-direction: column; gap: 10px; }
 
   .steps-grid { grid-template-columns: 1fr; gap: 16px; }
   .step-card { padding: 28px 20px; }
