@@ -338,7 +338,8 @@ h1, h2, h3, h4 {
   position: relative;
   z-index: 2;
   text-align: center;
-  max-width: 720px;
+  max-width: 1100px;
+  width: 100%;
 }
 
 .hero-logo {
@@ -1665,6 +1666,207 @@ h1, h2, h3, h4 {
   margin: 0 auto;
 }
 
+/* ========== PRODUCT PHOTOS ========== */
+.product-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-photo {
+  transform: scale(1.08);
+}
+
+.product-img-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+  transition: opacity 0.4s ease;
+}
+
+.product-card:hover .product-img-overlay {
+  opacity: 0.15;
+}
+
+/* ========== HERO SPLIT LAYOUT ========== */
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.hero-text {
+  text-align: left;
+}
+
+.hero-text .hero-logo {
+  margin: 0 0 32px 0;
+}
+
+.hero-text .hero-actions {
+  justify-content: flex-start;
+}
+
+.hero-image {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  aspect-ratio: 9/14;
+  max-height: 520px;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.hero-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(232,75,138,0.2) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ========== ABOUT IMAGE ========== */
+.about-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+/* ========== EVENTO HERO IMAGE ========== */
+.evento-hero-img {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-md);
+  aspect-ratio: 16/9;
+}
+
+.evento-hero-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ========== INSTAGRAM GALLERY ========== */
+.instagram-section {
+  background: var(--brown);
+  color: var(--white);
+}
+
+.instagram-section .section-tag {
+  background: rgba(232,75,138,0.2);
+  color: var(--pink-light);
+}
+
+.instagram-section h2 {
+  color: var(--white);
+  font-size: clamp(28px, 4vw, 44px);
+}
+
+.instagram-section p {
+  color: rgba(255,255,255,0.7);
+}
+
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 40px;
+}
+
+.insta-item {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.insta-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.insta-item:hover img {
+  transform: scale(1.1);
+}
+
+.insta-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(232,75,138,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.insta-item:hover .insta-overlay {
+  opacity: 1;
+}
+
+.insta-icon {
+  color: var(--white);
+  width: 28px;
+  height: 28px;
+}
+
+.insta-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.insta-cta {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.btn-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 36px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #833AB4, #E1306C, #F77737);
+  color: var(--white);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(225,48,108,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-instagram:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(225,48,108,0.5);
+}
+
+.btn-instagram svg {
+  width: 20px;
+  height: 20px;
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1024px) {
   .about-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -1673,6 +1875,12 @@ h1, h2, h3, h4 {
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .evento-wrapper { grid-template-columns: 1fr; }
   .combos-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-split { grid-template-columns: 1fr; gap: 32px; }
+  .hero-text { text-align: center; }
+  .hero-text .hero-logo { margin: 0 auto 32px; }
+  .hero-text .hero-actions { justify-content: center; }
+  .hero-image { max-height: 400px; aspect-ratio: 4/5; margin: 0 auto; max-width: 360px; }
+  .insta-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -1688,6 +1896,8 @@ h1, h2, h3, h4 {
   .hero-actions { flex-direction: column; width: 100%; }
   .hero-actions .btn-primary,
   .hero-actions .btn-secondary { width: 100%; justify-content: center; }
+  .hero-image { max-height: 340px; max-width: 280px; }
+  .insta-grid { grid-template-columns: repeat(2, 1fr); }
 
   .products-grid { grid-template-columns: 1fr; }
   .products-grid-2 { grid-template-columns: 1fr; max-width: 100%; }
